@@ -56,7 +56,7 @@ class SnoozedState extends AlertState {
   }
   snoose() {
     const now = new Date();
-    if (this.preference.snoozeUntil < now) {
+    if (!this.preference.snoozeUntil || this.preference.snoozeUntil < now) {
       const endofDay = new Date();
       endofDay.setHours(23, 59, 59, 999);
       this.preference.snoozeUntil = endofDay;
@@ -66,10 +66,7 @@ class SnoozedState extends AlertState {
   }
   isDueForRemainder() {
     const now = new Date();
-    return (
-      this.preference.snoozeUntil < now &&
-      now.getDate() !== this.preference.snoozeUntil.getDate()
-    );
+    return !this.preference.snoozedUntil || this.preference.snoozedUntil < now;
   }
 }
 

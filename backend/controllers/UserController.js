@@ -14,11 +14,6 @@ exports.getUserAlerts = async (req, res) => {
       isActive: true,
       startTime: { $lte: now },
       expiryTime: { $gte: now },
-      visibility: {
-        $elemMatch: {
-          /* Simplified; use resolver for full */
-        },
-      },
     });
 
     const userAlerts = await Promise.all(

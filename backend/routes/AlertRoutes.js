@@ -4,14 +4,17 @@ const {
   updateAlert,
   listAlerts,
 } = require("../controllers/AlertController");
-const { isAdmin } = require("../middleware/AuthMiddleware");
+const {
+  authenticate,
+  authorizeAdmin,
+} = require("../middleware/AuthMiddleware");
 
 const router = express.Router();
 
 // Assume admin check middleware
 
-router.post("/", isAdmin, createAlert);
-router.put("/:id", isAdmin, updateAlert);
-router.get("/", isAdmin, listAlerts);
+router.post("/", authenticate, authorizeAdmin, createAlert);
+router.put("/:id", authenticate, authorizeAdmin, updateAlert);
+router.get("/", authenticate, authorizeAdmin, listAlerts);
 
 module.exports = router;
