@@ -8,7 +8,7 @@ const { AlertStateManager } = require("../services/AlertStateManager");
 
 exports.getUserAlerts = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const now = new Date();
     const alerts = await Alert.find({
       isActive: true,
@@ -22,6 +22,7 @@ exports.getUserAlerts = async (req, res) => {
           alert.visibility,
           userId
         );
+
         if (!targets.length) return null;
 
         const pref = await userAlertPreferences.findOne({

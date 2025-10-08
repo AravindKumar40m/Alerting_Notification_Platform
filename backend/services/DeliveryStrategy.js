@@ -19,7 +19,7 @@ class InAppDeliveryStrategy extends DeliveryStrategy {
 class DeliveryFactory {
   static createStrategy(type) {
     switch (type) {
-      case "InApp":
+      case "In-App":
         return new InAppDeliveryStrategy();
 
       default:

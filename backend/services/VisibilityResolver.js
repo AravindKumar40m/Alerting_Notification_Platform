@@ -4,6 +4,8 @@ const Team = require("../models/TeamModel");
 class VisibilityResolver {
   static async resolveTargets(visibility, currentUserId = null) {
     const { type, target } = visibility;
+    // console.log(type);
+
     let targets = [];
 
     switch (type) {
@@ -22,6 +24,7 @@ class VisibilityResolver {
         targets = target;
         break;
     }
+    // console.log(targets);
 
     if (currentUserId) {
       return targets.includes(currentUserId) ? [currentUserId] : [];
