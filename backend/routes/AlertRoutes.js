@@ -16,5 +16,6 @@ const router = express.Router();
 router.post("/", authenticate, authorizeAdmin, createAlert);
 router.put("/:id", authenticate, authorizeAdmin, updateAlert);
 router.get("/", authenticate, authorizeAdmin, listAlerts);
+router.get();
 
 module.exports = router;
