@@ -9,12 +9,14 @@ const { AlertStateManager } = require("../services/AlertStateManager");
 exports.getUserAlerts = async (req, res) => {
   try {
     const userId = req.user._id;
+
     const now = new Date();
     const alerts = await Alert.find({
       isActive: true,
       startTime: { $lte: now },
       expiryTime: { $gte: now },
     });
+    // console.log(alerts);
 
     const userAlerts = await Promise.all(
       alerts.map(async (alert) => {
@@ -22,6 +24,7 @@ exports.getUserAlerts = async (req, res) => {
           alert.visibility,
           userId
         );
+        console.log(targets);
 
         if (!targets.length) return null;
 
@@ -51,7 +54,7 @@ exports.getUserAlerts = async (req, res) => {
 
 exports.markRead = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const state = await AlertStateManager.getState(userId, req.params.id);
     state.markRead();
     res.json({ status: "read" });
@@ -63,7 +66,7 @@ exports.markRead = async (req, res) => {
 // Snooze alert
 exports.snoozeAlert = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const state = await AlertStateManager.getState(userId, req.params.id);
     state.snoose();
     res.json({ status: "snoozed" });

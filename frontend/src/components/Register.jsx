@@ -13,7 +13,7 @@ const Register = () => {
     password: "",
     name: "",
     role: "User",
-    teamId: "", // Now from select
+    team: "", // Now from select
   });
   const [showPassword, setShowPassword] = useState(false);
   const [teams, setTeams] = useState([]); // Fetch teams
@@ -150,9 +150,9 @@ const Register = () => {
               </div>
             ) : (
               <select
-                value={formData.teamId}
+                value={formData.team}
                 onChange={(e) =>
-                  setFormData({ ...formData, teamId: e.target.value })
+                  setFormData({ ...formData, team: e.target.value })
                 }
                 className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
               >

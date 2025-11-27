@@ -8,7 +8,7 @@ const authenticate = async (req, res, next) => {
     if (!token) return res.status(401).json({ error: "Access denied" });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = await User.findOne({ id: decoded.id }).select("-password");
+    req.user = await User.findById(decoded._id).select("-password");
     next();
   } catch (err) {
     res.status(401).json({ error: "Invalid token" });

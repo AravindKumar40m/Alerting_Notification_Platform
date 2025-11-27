@@ -13,30 +13,27 @@ async function seed() {
   const engineering = await new Team({ id: "eng", name: "Engineering" }).save();
   const marketing = await new Team({ id: "mkt", name: "Marketing" }).save();
 
-  const adminPassword = await bcrypt.hash("adminpass", 10);
-  await new User({
-    id: "admin1",
-    email: "admin@example.com",
-    password: adminPassword,
-    name: "Admin User",
-    role: "Admin",
-  }).save();
+  // const adminPassword = await bcrypt.hash("adminpass", 10);
+  // await new User({
+  //   email: "admin@example.com",
+  //   password: adminPassword,
+  //   name: "Admin User",
+  //   role: "Admin",
+  // }).save();
 
-  const userPassword = await bcrypt.hash("userpass", 10);
-  await new User({
-    id: "user1",
-    email: "eng@example.com",
-    password: userPassword,
-    name: "Eng User",
-    team: engineering._id,
-  }).save();
-  await new User({
-    id: "user2",
-    email: "mkt@example.com",
-    password: userPassword,
-    name: "Mkt User",
-    team: marketing._id,
-  }).save();
+  // const userPassword = await bcrypt.hash("userpass", 10);
+  // await new User({
+  //   email: "eng@example.com",
+  //   password: userPassword,
+  //   name: "Eng User",
+  //   team: engineering._id,
+  // }).save();
+  // await new User({
+  //   email: "mkt@example.com",
+  //   password: userPassword,
+  //   name: "Mkt User",
+  //   team: marketing._id,
+  // }).save();
 
   console.log("Seeded!");
   mongoose.disconnect();

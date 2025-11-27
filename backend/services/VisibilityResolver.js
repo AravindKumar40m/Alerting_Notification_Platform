@@ -4,7 +4,7 @@ const Team = require("../models/TeamModel");
 class VisibilityResolver {
   static async resolveTargets(visibility, currentUserId = null) {
     const { type, target } = visibility;
-    // console.log(type);
+    // console.log(visibility);
 
     let targets = [];
 
@@ -15,16 +15,21 @@ class VisibilityResolver {
         break;
       case "Team":
         const teams = await Team.find({ id: { $in: target } }).select("_id");
+        // console.log(teams);
+
         const teamUsers = await User.find({
-          team: { $in: teams.map((t) => t._id), role: "User" },
+          team: { $in: teams.map((t) => t._id) },
+          role: "User",
         }).select("_id");
+        // console.log(teamUsers);
+
         targets = teamUsers.map((u) => u._id.toString());
         break;
       case "User":
         targets = target;
         break;
     }
-    // console.log(targets);
+    console.log(targets);
 
     if (currentUserId) {
       return targets.includes(currentUserId) ? [currentUserId] : [];

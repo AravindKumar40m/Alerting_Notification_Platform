@@ -3,6 +3,8 @@ import {
   EyeIcon,
   PlusIcon,
   UserGroupIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +13,9 @@ import api from "../utils/axios";
 const AdminDashboard = () => {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [success, setSuccess] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -60,22 +64,39 @@ const AdminDashboard = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
     try {
-      const res = await api.post("/alerts", formData);
-      setAlerts([...alerts, res.data]);
-      setFormData({ ...formData, title: "", message: "" });
-      setShowForm(false);
+      console.log(formData);
+
+      await api
+        .post("/alerts", formData)
+        .then((res) => {
+          setAlerts([...alerts, res.data]);
+          setFormData({ ...formData, title: "", message: "" });
+          setShowForm(false);
+          setSuccess("Alert created and delivered successfully!");
+        })
+        .catch((err) => console.log(err));
     } catch (err) {
       console.error(err);
+      setError(
+        err.response?.data?.error || "Failed to create alert. Please try again."
+      );
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+  const handleCancel = () => {
+    setShowForm(false);
+    setError(""); // Clear on cancel
+    setSuccess(""); // Clear on cancel
+  };
+  // if (loading)
+  //   return (
+  //     <div className="flex justify-center items-center h-64">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  //     </div>
+  //   );
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -102,6 +123,18 @@ const AdminDashboard = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 className="text-2xl font-bold mb-6">Create New Alert</h3>
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4 flex items-center space-x-2">
+                <ExclamationTriangleIcon className="h-5 w-5" />
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg mb-4 flex items-center space-x-2">
+                <CheckCircleIcon className="h-5 w-5" />
+                <span>{success}</span>
+              </div>
+            )}
             <form onSubmit={handleCreate} className="space-y-4">
               <input
                 type="text"
@@ -177,7 +210,7 @@ const AdminDashboard = () => {
                     className="w-full p-3 border border-gray-300 rounded-lg h-24"
                   >
                     {teams.map((team) => (
-                      <option key={team._id} value={team._id}>
+                      <option key={team.id} value={team.id}>
                         {team.name}
                       </option>
                     ))}
@@ -207,7 +240,7 @@ const AdminDashboard = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowForm(false)}
+                  onClick={handleCancel}
                   className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors"
                 >
                   Cancel
